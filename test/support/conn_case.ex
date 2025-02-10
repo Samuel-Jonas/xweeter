@@ -19,25 +19,20 @@ defmodule XweeterWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint XweeterWeb.Endpoint
+
+      use XweeterWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import XweeterWeb.ConnCase
-
-      alias XweeterWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint XweeterWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Xweeter.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Xweeter.Repo, {:shared, self()})
-    end
-
+    Xweeter.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
