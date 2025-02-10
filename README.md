@@ -1,9 +1,9 @@
 # Xweeter
 
 ## Dependencies
-> 1. Erlang 27.2.2
-> 2. Elixir 1.18.2
-> 3. Phoenix 1.7.19
+1. Erlang 27.2.2
+2. Elixir 1.18.2
+3. Phoenix 1.7.19
 
 To start your Phoenix server:
 
