@@ -18,6 +18,8 @@ defmodule XweeterWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/user", UserController, :index
+    get "/user/:messenger", UserController, :show
   end
 
   # Other scopes may use custom stacks.

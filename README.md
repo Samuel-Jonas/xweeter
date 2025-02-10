@@ -19,6 +19,18 @@ Run the command:
 docker run --privileged --name xweeter_database -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=xweeter_dev -p 5432:5432 -d postgres
 ```
 
+Generate schema:
+
+```sh
+mix phx.gen.schema User user name:string email:string password:string status:integer
+```
+
+migrate schema
+
+```sh
+mix ecto.migrate
+```
+
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Learn more
