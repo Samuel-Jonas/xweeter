@@ -50,4 +50,8 @@ defmodule XweeterWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
+
+  def static_paths() do
+    ~w(css fonts images js favicon.ico robots.txt animations)
+  end
 end
