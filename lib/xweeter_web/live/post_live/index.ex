@@ -28,7 +28,7 @@ defmodule XweeterWeb.PostLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Posts")
+    |> assign(:page_title, "Feed")
     |> assign(:post, nil)
   end
 
