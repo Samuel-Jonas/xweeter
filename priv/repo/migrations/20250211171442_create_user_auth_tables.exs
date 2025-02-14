@@ -12,6 +12,10 @@ defmodule Xweeter.Repo.Migrations.CreateUserAuthTables do
 
         timestamps(type: :utc_datetime)
       end
+    else
+      alter table(:user) do
+        add_if_not_exists :hashed_password, :string, null: false
+      end
     end
 
     create unique_index(:user, [:email])

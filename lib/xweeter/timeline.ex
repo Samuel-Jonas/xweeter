@@ -18,7 +18,7 @@ defmodule Xweeter.Timeline do
 
   """
   def list_posts do
-    Repo.all(Post)
+    Repo.all(from p in Post, order_by: [desc: p.id])
   end
 
   @doc """
@@ -37,6 +37,23 @@ defmodule Xweeter.Timeline do
   """
   def get_post!(id), do: Repo.get!(Post, id)
 
+
+  def inc_like_post(%Post{id: id}) do
+    {1, [post]} =
+      from(p in Post, where: p.id == ^id, select: p)
+      |> Repo.update_all(inc: [likes_count: 1])
+
+    broadcast({:ok, post}, :post_updated)
+  end
+
+  def inc_repost(%Post{id: id}) do
+    {1, [post]} =
+      from(p in Post, where: p.id == ^id, select: p)
+      |> Repo.update_all(inc: [reposts_count: 1])
+
+    broadcast({:ok, post}, :post_updated)
+  end
+
   @doc """
   Creates a post.
 
@@ -53,6 +70,7 @@ defmodule Xweeter.Timeline do
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
+    |> broadcast(:post_created)
   end
 
   @doc """
@@ -71,6 +89,7 @@ defmodule Xweeter.Timeline do
     post
     |> Post.changeset(attrs)
     |> Repo.update()
+    |> broadcast(:post_created)
   end
 
   @doc """
@@ -100,5 +119,15 @@ defmodule Xweeter.Timeline do
   """
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(Xweeter.PubSub, "posts")
+  end
+
+  defp broadcast({:error, _reason} = error, _event), do: error
+  defp broadcast({:ok, post}, event) do
+    Phoenix.PubSub.broadcast(Xweeter.PubSub, "posts", {event, post})
+    {:ok, post}
   end
 end

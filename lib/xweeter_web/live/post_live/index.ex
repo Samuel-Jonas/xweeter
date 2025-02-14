@@ -6,7 +6,9 @@ defmodule XweeterWeb.PostLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :posts, Timeline.list_posts())}
+    if connected?(socket), do: Timeline.subscribe()
+
+    {:ok, stream(socket, :posts, fetch_posts())}
   end
 
   @impl true
@@ -33,8 +35,9 @@ defmodule XweeterWeb.PostLive.Index do
   end
 
   @impl true
-  def handle_info({XweeterWeb.PostLive.FormComponent, {:saved, post}}, socket) do
-    {:noreply, stream_insert(socket, :posts, post)}
+  def handle_info({XweeterWeb.PostLive.FormComponent, {:saved, _post}}, socket) do
+    posts = fetch_posts()
+    {:noreply, stream(socket, :posts, posts, reset: true)}
   end
 
   @impl true
@@ -42,6 +45,23 @@ defmodule XweeterWeb.PostLive.Index do
     post = Timeline.get_post!(id)
     {:ok, _} = Timeline.delete_post(post)
 
-    {:noreply, stream_delete(socket, :posts, post)}
+    posts = fetch_posts()
+    {:noreply, stream(socket, :posts, posts, reset: true)}
+  end
+
+  @impl true
+  def handle_info({:post_created, _post}, socket) do
+    posts = fetch_posts()
+    {:noreply, stream(socket, :posts, posts, reset: true)}
+  end
+
+  @impl true
+  def handle_info({:post_updated, _post}, socket) do
+    posts = fetch_posts()
+    {:noreply, stream(socket, :posts, posts, reset: true)}
+  end
+
+  def fetch_posts do
+    Timeline.list_posts()
   end
 end

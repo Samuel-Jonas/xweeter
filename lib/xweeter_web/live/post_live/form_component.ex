@@ -9,7 +9,7 @@ defmodule XweeterWeb.PostLive.FormComponent do
     <div>
       <.header>
         {@title}
-        <:subtitle>Use this form to manage post records in your database.</:subtitle>
+        <:subtitle>Write a new post.</:subtitle>
       </.header>
 
       <.simple_form
@@ -19,10 +19,9 @@ defmodule XweeterWeb.PostLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:username]} type="text" label="Username" />
-        <.input field={@form[:body]} type="text" label="Body" />
-        <.input field={@form[:likes_count]} type="number" label="Likes count" />
-        <.input field={@form[:reposts_count]} type="number" label="Reposts count" />
+
+        <.input field={@form[:body]} type="textarea" label="" />
+
         <:actions>
           <.button phx-disable-with="Saving...">Save Post</.button>
         </:actions>
@@ -59,7 +58,7 @@ defmodule XweeterWeb.PostLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Post updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_patch(to: "/posts")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -74,7 +73,7 @@ defmodule XweeterWeb.PostLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Post created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_patch(to: "/posts")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
