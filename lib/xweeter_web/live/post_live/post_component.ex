@@ -42,12 +42,13 @@ defmodule XweeterWeb.PostLive.PostComponent do
     </div>
     """
   end
-
+  @impl true
   def handle_event("like", _value, socket) do
     Xweeter.Timeline.inc_like_post(socket.assigns.post)
     {:noreply, socket}
   end
-
+  
+  @impl true
   def handle_event("repost", _value, socket) do
     Xweeter.Timeline.inc_repost(socket.assigns.post)
     {:noreply, socket}

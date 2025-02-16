@@ -60,6 +60,11 @@ defmodule Xweeter.Account do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+
+  def list_users do
+    Repo.all(User)
+  end
+
   ## User registration
 
   @doc """

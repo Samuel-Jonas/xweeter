@@ -95,4 +95,10 @@ defmodule XweeterWeb.Router do
       live "/user/confirm", UserConfirmationInstructionsLive, :new
     end
   end
+
+  scope "/", XweeterWeb do
+    pipe_through :browser
+
+    live "/users", UserListLive.Index, :index
+  end
 end
