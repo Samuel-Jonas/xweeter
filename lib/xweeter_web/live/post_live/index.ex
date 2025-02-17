@@ -5,10 +5,25 @@ defmodule XweeterWeb.PostLive.Index do
   alias Xweeter.Timeline.Post
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     if connected?(socket), do: Timeline.subscribe()
 
+    current_user = get_current_user_from_session(session)
+
+    socket =
+      socket
+      |> assign(:current_user, current_user)
+      |> assign(:posts, fetch_posts())
+
     {:ok, stream(socket, :posts, fetch_posts())}
+  end
+
+  defp get_current_user_from_session(session) do
+    if token = session["user_token"] do
+      Xweeter.Account.get_user_by_session_token(token)
+    else
+      nil
+    end
   end
 
   @impl true
@@ -37,7 +52,7 @@ defmodule XweeterWeb.PostLive.Index do
   @impl true
   def handle_info({XweeterWeb.PostLive.FormComponent, {:saved, _post}}, socket) do
     posts = fetch_posts()
-    {:noreply, stream(socket, :posts, posts, reset: true)}
+    {:noreply, stream(socket, :posts, posts)}
   end
 
   @impl true
@@ -46,19 +61,19 @@ defmodule XweeterWeb.PostLive.Index do
     {:ok, _} = Timeline.delete_post(post)
 
     posts = fetch_posts()
-    {:noreply, stream(socket, :posts, posts, reset: true)}
+    {:noreply, stream(socket, :posts, posts)}
   end
 
   @impl true
   def handle_info({:post_created, _post}, socket) do
     posts = fetch_posts()
-    {:noreply, stream(socket, :posts, posts, reset: true)}
+    {:noreply, stream(socket, :posts, posts)}
   end
 
   @impl true
   def handle_info({:post_updated, _post}, socket) do
     posts = fetch_posts()
-    {:noreply, stream(socket, :posts, posts, reset: true)}
+    {:noreply, stream(socket, :posts, posts)}
   end
 
   def fetch_posts do

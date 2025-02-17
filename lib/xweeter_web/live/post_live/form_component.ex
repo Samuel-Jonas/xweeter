@@ -66,7 +66,11 @@ defmodule XweeterWeb.PostLive.FormComponent do
   end
 
   defp save_post(socket, :new, post_params) do
-    case Timeline.create_post(post_params) do
+    current_user = socket.assigns[:current_user]
+    updated_params = Map.put(post_params, "username", current_user.username)
+    IO.inspect(updated_params, label: "updated params")
+
+    case Timeline.create_post(updated_params) do
       {:ok, post} ->
         notify_parent({:saved, post})
 

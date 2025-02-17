@@ -10,7 +10,7 @@ defmodule XweeterWeb.UserListLive.Index do
   end
 
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div class="container mx-auto p-4">
       <h3 class="text-2xl font-bold mb-4">Lista de Usuários</h3>
 
