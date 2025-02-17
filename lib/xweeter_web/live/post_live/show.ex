@@ -4,8 +4,24 @@ defmodule XweeterWeb.PostLive.Show do
   alias Xweeter.Timeline
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    if connected?(socket), do: Timeline.subscribe()
+
+    current_user = get_current_user_from_session(session)
+
+    socket =
+      socket
+      |> assign(:current_user, current_user)
+
     {:ok, socket}
+  end
+
+  defp get_current_user_from_session(session) do
+    if token = session["user_token"] do
+      Xweeter.Account.get_user_by_session_token(token)
+    else
+      nil
+    end
   end
 
   @impl true

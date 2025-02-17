@@ -22,6 +22,7 @@
   <.live_component 
     module={XweeterWeb.PostLive.PostComponent} 
     id={@post.id} 
+    action={@live_action}
     post={@post} 
     patch={~p"/posts"} 
   /> 
@@ -34,6 +35,7 @@
     title={@page_title} 
     action={@live_action} 
     post={@post} 
-    patch={~p"/posts"} 
+    current_user={@current_user}
+    patch={~p"/posts"}
   /> 
 </.modal>

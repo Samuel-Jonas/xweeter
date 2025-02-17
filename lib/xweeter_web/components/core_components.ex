@@ -130,9 +130,15 @@ defmodule XweeterWeb.CoreComponents do
         {@title}
       </p>
       <p class="mt-2 text-sm leading-5">{msg}</p>
-      <a href="#" class="btn-close group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+      <button
+        type="button"
+        phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+        class="btn-close group absolute top-1 right-1 p-2"
+        aria-label={gettext("close")}
+        onclick="window.location.reload();"
+      >
         <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
-      </a>
+      </button>
     </div>
     """
   end
